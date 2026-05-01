@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thaís Maia — Plano de Estudos</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0f0f;--bg2:#161616;--bg3:#1e1e1e;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#f0f0f0;--muted:#888;--dim:#444;
+  --accent:#c8a96e;--accent2:#8b7355;
+  --green:#4caf7d;--red:#e05c5c;
+  --r:10px;--r-sm:6px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
+.layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);padding:28px 0;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.brand{padding:0 24px 28px;border-bottom:1px solid var(--border)}
+.brand-name{font-family:'Instrument Serif',serif;font-size:20px;color:var(--text);line-height:1.2}
+.brand-sub{font-size:11px;color:var(--dim);margin-top:3px;letter-spacing:0.03em}
+.nav{flex:1;padding:16px 0}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 24px;cursor:pointer;color:var(--muted);font-size:13px;transition:all 0.15s;border-left:2px solid transparent}
+.nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03)}
+.nav-item.active{color:var(--text);border-left-color:var(--accent);background:rgba(200,169,110,0.06)}
+.nav-icon{width:16px;height:16px;opacity:0.7;flex-shrink:0}
+.main{background:var(--bg);overflow-y:auto}
+.panel{display:none;padding:36px 40px;max-width:900px}
+.panel.active{display:block}
+.page-title{font-family:'Instrument Serif',serif;font-size:28px;color:var(--text);margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--muted);margin-bottom:32px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:24px}
+.card-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);margin-bottom:14px;font-weight:500}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-mini{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px}
+.stat-n{font-family:'Instrument Serif',serif;font-size:28px;color:var(--accent)}
+.stat-l{font-size:11px;color:var(--muted);margin-top:2px}
+.meta-wrap{margin-bottom:28px}
+.meta-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.meta-label{font-size:13px;color:var(--muted)}
+.meta-value{font-family:'Instrument Serif',serif;font-size:16px;color:var(--text)}
+.meta-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.meta-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.5s ease}
+.meta-fill.completo{background:var(--green)}
+.timer-number{font-family:'Instrument Serif',serif;font-size:88px;color:var(--text);letter-spacing:-3px;line-height:1;text-align:center;transition:color 0.3s}
+.timer-number.running{color:var(--accent)}
+.timer-number.warning{color:#e8a44a}
+.timer-number.done{color:var(--green)}
+.timer-sub{text-align:center;font-size:12px;color:var(--muted);margin:6px 0 20px;min-height:16px}
+.timer-prog{height:2px;background:var(--border);border-radius:1px;margin:16px 0 24px;overflow:hidden}
+.timer-prog-fill{height:100%;background:var(--accent);border-radius:1px;transition:width 1s linear}
+.btn{padding:10px 22px;border-radius:var(--r-sm);border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.15s}
+.btn-primary{background:var(--accent);color:#0f0f0f}
+.btn-primary:hover{background:#d4b87a}
+.btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--border2);color:var(--text);background:rgba(255,255,255,0.04)}
+.btn-danger{background:transparent;border:1px solid rgba(224,92,92,0.3);color:var(--red)}
+.btn-sm{padding:7px 14px;font-size:12px}
+.btn-row{display:flex;gap:10px;justify-content:center;align-items:center}
+.presets{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.preset{padding:6px 14px;border-radius:50px;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.preset.active,.preset:hover{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,0.08)}
+.select{background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r-sm);padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;width:100%;outline:none;margin-bottom:20px}
+.select:focus{border-color:var(--accent2)}
+.session-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}
+.session-row:last-child{border-bottom:none}
+.s-mat{color:var(--text)}
+.s-time{font-size:11px;color:var(--dim);margin-top:1px}
+.s-dur{font-family:'Instrument Serif',serif;font-size:15px;color:var(--accent)}
+.empty{font-size:12px;color:var(--dim);text-align:center;padding:20px 0}
+.day-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:24px}
+.day-cell{border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.15s}
+.day-cell:hover{border-color:var(--border2)}
+.day-cell.active{border-color:var(--accent);background:rgba(200,169,110,0.06)}
+.day-cell.today{border-color:var(--border2)}
+.day-cell.folga{opacity:0.4;cursor:default}
+.day-name{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--dim)}
+.day-num{font-family:'Instrument Serif',serif;font-size:20px;margin-top:2px}
+.day-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin:5px auto 0;opacity:0}
+.day-cell.studied .day-dot{opacity:1}
+.sched-item{display:flex;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.sched-item:last-child{border-bottom:none}
+.sched-item.done .sched-name{text-decoration:line-through;opacity:0.5}
+.check-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--dim);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.sched-item.done .check-box{background:var(--green);border-color:var(--green)}
+.check-mark{display:none;font-size:10px;color:#fff}
+.sched-item.done .check-mark{display:block}
+.sched-name{font-size:13px;color:var(--text);font-weight:500}
+.sched-tag{font-size:11px;color:var(--muted);margin-top:2px}
+.sched-dur{font-size:12px;color:var(--accent);margin-top:3px}
+.folga-msg{text-align:center;padding:40px 0}
+.folga-title{font-family:'Instrument Serif',serif;font-size:22px;color:var(--text);margin-bottom:8px}
+.folga-sub{font-size:13px;color:var(--muted)}
+.mat-group{margin-bottom:8px}
+.mat-header{display:flex;align-items:center;gap:10px;width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-sm);padding:13px 16px;cursor:pointer;transition:border-color 0.15s;color:var(--text)}
+.mat-header:hover{border-color:var(--border2)}
+.mat-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.mat-name{font-size:13px;font-weight:500;flex:1;text-align:left}
+.mat-count{font-size:11px;color:var(--dim)}
+.mat-arr{font-size:11px;color:var(--dim);transition:transform 0.2s}
+.mat-header.open .mat-arr{transform:rotate(90deg)}
+.mat-body{display:none;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r-sm) var(--r-sm);padding:12px 16px;margin-bottom:8px}
+.mat-body.open{display:block}
+.topic{font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;line-height:1.5}
+.topic:last-child{border-bottom:none}
+.topic-n{color:var(--dim);min-width:18px;font-size:11px;padding-top:1px}
+.section-sep{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--dim);margin:24px 0 12px}
+.q-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.q-tag{padding:6px 14px;border-radius:50px;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:12px;transition:all 0.15s}
+.q-tag.active,.q-tag:hover{border-color:var(--accent);color:var(--accent);background:rgba(200,169,110,0.08)}
+.questao-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:22px;margin-bottom:14px}
+.q-num{font-size:10px;letter-spacing:0.08em;color:var(--dim);text-transform:uppercase;margin-bottom:6px}
+.q-materia{font-size:11px;color:var(--accent);margin-bottom:12px}
+.q-enunciado{font-size:14px;color:var(--text);line-height:1.7;margin-bottom:18px}
+.q-opcoes{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.opcao{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-radius:var(--r-sm);border:1px solid var(--border);cursor:pointer;transition:all 0.15s;font-size:13px;color:var(--muted)}
+.opcao:hover:not(.disabled){border-color:var(--border2);color:var(--text)}
+.opcao.correta{border-color:var(--green);background:rgba(76,175,125,0.08);color:var(--text)}
+.opcao.errada{border-color:var(--red);background:rgba(224,92,92,0.08);color:var(--text)}
+.opcao.disabled{cursor:default}
+.opcao-letra{width:20px;height:20px;border-radius:50%;border:1px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:1px}
+.q-feedback{display:none;padding:12px 16px;border-radius:var(--r-sm);font-size:13px;line-height:1.6;margin-bottom:14px}
+.q-feedback.show{display:block}
+.q-feedback.acerto{background:rgba(76,175,125,0.1);border:1px solid rgba(76,175,125,0.2);color:#7dd4a8}
+.q-feedback.erro{background:rgba(224,92,92,0.1);border:1px solid rgba(224,92,92,0.2);color:#e88}
+.q-score-bar{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:20px;font-size:13px}
+.score-label{color:var(--muted)}
+.score-n{font-family:'Instrument Serif',serif;font-size:20px;color:var(--accent)}
+.score-sep{color:var(--dim)}
+.chat-box{display:flex;flex-direction:column;height:500px}
+.chat-msgs{flex:1;overflow-y:auto;padding:4px 0;display:flex;flex-direction:column;gap:14px}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.msg{display:flex;gap:10px;align-items:flex-start}
+.msg.user{flex-direction:row-reverse}
+.msg-av{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500}
+.msg-av.ai-av{background:var(--bg3);border:1px solid var(--border2);color:var(--accent);font-family:'Instrument Serif',serif}
+.msg-av.user-av{background:rgba(200,169,110,0.15);color:var(--accent)}
+.bubble{max-width:80%;padding:11px 15px;border-radius:10px;font-size:13px;line-height:1.7;color:var(--text)}
+.msg.ai .bubble{background:var(--bg2);border:1px solid var(--border);border-top-left-radius:2px}
+.msg.user .bubble{background:rgba(200,169,110,0.1);border:1px solid rgba(200,169,110,0.15);border-top-right-radius:2px}
+.bubble strong{color:var(--accent);font-weight:500}
+.typing-dots{display:flex;gap:4px;padding:4px 2px}
+.typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--dim);animation:blink 1.2s infinite}
+.typing-dots span:nth-child(2){animation-delay:.2s}
+.typing-dots span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.chat-footer{padding-top:14px;border-top:1px solid var(--border);margin-top:12px;display:flex;gap:8px}
+.chat-input{flex:1;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:var(--r-sm);padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;resize:none;max-height:80px}
+.chat-input:focus{border-color:var(--accent2)}
+.chat-input::placeholder{color:var(--dim)}
+.chat-send{width:38px;height:38px;border-radius:var(--r-sm);background:var(--accent);border:none;color:#0f0f0f;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:flex-end;transition:all 0.15s}
+.chat-send:hover{background:#d4b87a}
+.quick-qs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.quick-q{font-size:11px;padding:5px 11px;border-radius:50px;background:transparent;border:1px solid var(--border);color:var(--muted);cursor:pointer;transition:all 0.15s}
+.quick-q:hover{border-color:var(--accent2);color:var(--text)}
+.prog-row{margin-bottom:14px}
+.prog-h{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.prog-mat{color:var(--text)}
+.prog-min{color:var(--accent);font-family:'Instrument Serif',serif}
+.prog-bg{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.prog-bar{height:100%;border-radius:2px;transition:width 0.6s ease}
+.notif{position:fixed;bottom:20px;right:20px;z-index:999;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r-sm);padding:12px 18px;font-size:13px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:notifIn 0.3s ease;max-width:260px}
+@keyframes notifIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.sidebar{display:none}.panel{padding:20px}.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-name">Thaís Maia</div>
+    <div class="brand-sub">Concurseira</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-item active" onclick="nav('timer',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="9" r="5.5"/><path d="M8 6v3l2 1M6 1h4M8 1v2.5"/></svg>
+      Timer
+    </div>
+    <div class="nav-item" onclick="nav('cronograma',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="2.5" width="13" height="12" rx="2"/><path d="M1.5 6.5h13M5 1v3M11 1v3"/><rect x="4" y="8.5" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/><rect x="7" y="8.5" width="2" height="2" rx="0.5" fill="currentColor" stroke="none"/></svg>
+      Cronograma
+    </div>
+    <div class="nav-item" onclick="nav('conteudo',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h8l3 3v9H2zM10 2v3h3M5 8h6M5 10.5h4"/></svg>
+      Conteúdo
+    </div>
+    <div class="nav-item" onclick="nav('questoes',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 9.5V9a2 2 0 1 0-2-2"/><circle cx="8" cy="11.5" r="0.75" fill="currentColor" stroke="none"/></svg>
+      Exame de Conhecimento
+    </div>
+    <div class="nav-item" onclick="nav('professora',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 11.5C2 9 4 7.5 8 7.5s6 1.5 6 4"/><circle cx="8" cy="4.5" r="3"/></svg>
+      Professora IA
+    </div>
+    <div class="nav-item" onclick="nav('progresso',this)">
+      <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12l3-4 3 2 3-5 3 3"/></svg>
+      Progresso
+    </div>
+  </nav>
+</aside>
+
+<main class="main">
+
+<!-- TIMER -->
+<div id="panel-timer" class="panel active">
+  <div class="page-title">Timer de Estudos</div>
+  <div class="page-sub">Meta diária: 2 horas e 30 minutos</div>
+  <div class="meta-wrap">
+    <div class="meta-header">
+      <span class="meta-label">Progresso de hoje</span>
+      <span class="meta-value" id="metaVal">0 / 150 min</span>
+    </div>
+    <div class="meta-bar"><div class="meta-fill" id="metaFill" style="width:0%"></div></div>
+  </div>
+  <div class="grid-2" style="gap:16px">
+    <div class="card">
+      <div class="card-label">Sessão atual</div>
+      <select class="select" id="timerMat" onchange="updateSub()">
+        <option value="">Selecione a matéria...</option>
+        <option value="Língua Portuguesa">Língua Portuguesa</option>
+        <option value="Raciocínio Lógico">Raciocínio Lógico-Matemático</option>
+        <option value="Administração Pública">Administração Pública</option>
+        <option value="Direito Constitucional">Direito Constitucional</option>
+        <option value="Direito Administrativo">Direito Administrativo</option>
+        <option value="História de Rondônia">História de Rondônia</option>
+        <option value="Geografia de Rondônia">Geografia de Rondônia</option>
+        <option value="Informática">Noções de Informática</option>
+        <option value="Questões e Revisão">Questões e Revisão</option>
+      </select>
+      <div class="presets">
+        <button class="preset active" onclick="setT(25,this)">25 min</button>
+        <button class="preset" onclick="setT(45,this)">45 min</button>
+        <button class="preset" onclick="setT(60,this)">1 hora</button>
+        <button class="preset" onclick="setT(90,this)">1h 30</button>
+        <button class="preset" onclick="setT(150,this)">2h 30</button>
+      </div>
+      <div class="timer-number" id="timerNum">25:00</div>
+      <div class="timer-sub" id="timerSub">Nenhuma matéria selecionada</div>
+      <div class="timer-prog"><div class="timer-prog-fill" id="tFill" style="width:100%"></div></div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" onclick="resetT()">Resetar</button>
+        <button class="btn btn-primary" id="tBtn" onclick="toggleT()">Iniciar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">Sessões de hoje</div>
+      <div class="grid-3" style="margin-bottom:18px;gap:10px">
+        <div class="stat-mini"><div class="stat-n" id="sSessoes">0</div><div class="stat-l">Sessões</div></div>
+        <div class="stat-mini"><div class="stat-n" id="sMin">0</div><div class="stat-l">Minutos</div></div>
+        <div class="stat-mini"><div class="stat-n" id="sStreak">0</div><div class="stat-l">Sequência</div></div>
+      </div>
+      <div class="card-label">Histórico</div>
+      <div id="sessoesList" style="max-height:200px;overflow-y:auto"><div class="empty">Nenhuma sessão registrada hoje.</div></div>
+      <div style="margin-top:14px"><button class="btn btn-danger btn-sm" style="width:100%" onclick="clearSess()">Limpar histórico</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- CRONOGRAMA -->
+<div id="panel-cronograma" class="panel">
+  <div class="page-title">Cronograma Semanal</div>
+  <div class="page-sub">2h 30min por dia — sábado: questões — domingo: descanso</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="day-strip" id="dayStrip"></div>
+    <div id="dayContent"></div>
+  </div>
+  <div class="card">
+    <div class="card-label">Distribuição recomendada</div>
+    <div style="font-size:13px;color:var(--muted);line-height:2.2">
+      <div>Segunda — <span style="color:var(--text)">Língua Portuguesa + Direito Administrativo</span></div>
+      <div>Terça — <span style="color:var(--text)">Direito Constitucional + Administração Pública</span></div>
+      <div>Quarta — <span style="color:var(--text)">História de Rondônia + Geografia de Rondônia</span></div>
+      <div>Quinta — <span style="color:var(--text)">Raciocínio Lógico + Informática</span></div>
+      <div>Sexta — <span style="color:var(--text)">Língua Portuguesa + Revisão da semana</span></div>
+      <div>Sábado — <span style="color:var(--text)">Exames de Conhecimento (2h 30min)</span></div>
+      <div>Domingo — <span style="color:var(--text)">Descanso</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTEÚDO -->
+<div id="panel-conteudo" class="panel">
+  <div class="page-title">Conteúdo Programático</div>
+  <div class="page-sub">Matérias e tópicos para estudo</div>
+  <div class="section-sep">Conhecimentos Gerais</div>
+  <div id="gerais"></div>
+  <div class="section-sep">História e Geografia de Rondônia</div>
+  <div id="rondonia"></div>
+  <div class="section-sep">Noções de Informática</div>
+  <div id="informatica"></div>
+</div>
+
+<!-- QUESTÕES -->
+<div id="panel-questoes" class="panel">
+  <div class="page-title">Exame de Conhecimento</div>
+  <div class="page-sub">Questões estilo Cebraspe para treinamento</div>
+  <div id="scoreBar" class="q-score-bar" style="display:none">
+    <span class="score-label">Pontuação:</span>
+    <span class="score-n" id="scoreAcertos">0</span>
+    <span class="score-sep">/</span>
+    <span class="score-n" id="scoreTotal">0</span>
+    <span class="score-label" style="margin-left:6px">respondidas</span>
+    <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="resetQuiz()">Nova rodada</button>
+  </div>
+  <div class="q-filter" id="qFilter"></div>
+  <div id="qList"></div>
+</div>
+
+<!-- PROFESSORA IA -->
+<div id="panel-professora" class="panel">
+  <div class="page-title">Professora Lia</div>
+  <div class="page-sub">Especialista nas matérias do seu plano de estudos</div>
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid var(--border);margin-bottom:16px">
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif',serif;font-size:18px;color:var(--accent)">L</div>
+      <div>
+        <div style="font-size:14px;font-weight:500">Professora Lia</div>
+        <div style="font-size:11px;color:var(--green);display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block"></span>Disponível</div>
+      </div>
+    </div>
+    <div class="quick-qs" id="quickQs"></div>
+    <div class="chat-box">
+      <div class="chat-msgs" id="chatMsgs"></div>
+      <div class="chat-footer">
+        <textarea class="chat-input" id="chatIn" placeholder="Pergunte sobre as matérias..." rows="1" onkeydown="chatKey(event)"></textarea>
+        <button class="chat-send" onclick="sendChat()">&#8594;</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRESSO -->
+<div id="panel-progresso" class="panel">
+  <div class="page-title">Progresso</div>
+  <div class="page-sub">Acompanhamento do seu desempenho</div>
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="stat-mini"><div class="stat-n" id="pHoras">0h</div><div class="stat-l">Total estudado</div></div>
+    <div class="stat-mini"><div class="stat-n" id="pSessoes">0</div><div class="stat-l">Sessões</div></div>
+    <div class="stat-mini"><div class="stat-n" id="pStreak">0</div><div class="stat-l">Dias seguidos</div></div>
+    <div class="stat-mini"><div class="stat-n" id="pAcertos">--</div><div class="stat-l">Acertos questões</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">Tempo por matéria</div>
+    <div id="progBars"></div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+const MAT_GERAIS = [
+  {id:'lp',nome:'Língua Portuguesa',cor:'#7a6b5a',top:['Compreensão e interpretação de textos de gêneros variados','Reconhecimento de tipos e gêneros textuais','Domínio da ortografia oficial','Mecanismos de coesão textual — referenciação, substituição, conectores, tempos e modos verbais','Domínio da estrutura morfossintática — classes de palavras, coordenação, subordinação, pontuação, concordância verbal e nominal, regência verbal e nominal, crase, colocação de pronomes átonos','Reescrita de frases e parágrafos — significação das palavras, substituição de trechos, reorganização de orações']},
+  {id:'rl',nome:'Raciocínio Lógico-Matemático',cor:'#5a6b7a',top:['Estruturas lógicas','Diagramas lógicos','Trigonometria','Matrizes, determinantes e solução de sistemas lineares','Álgebra','Probabilidades','Combinações, arranjos e permutação','Geometria básica','Raciocínio analítico e argumentação — uso do senso crítico, tipos de argumentos (falaciosos e apelativos), comunicação eficiente de argumentos']},
+  {id:'ap',nome:'Administração Pública',cor:'#5a7a6b',top:['Abordagens clássica, burocrática e sistêmica da administração; evolução da administração pública no Brasil após 1930; reformas administrativas; nova gestão pública','Processo administrativo — planejamento, organização, direção e controle; estrutura organizacional; cultura organizacional','Gestão de pessoas — equilíbrio organizacional, objetivos e características, comportamento organizacional (motivação, liderança, desempenho)','Noções de gestão de processos — mapeamento, análise e melhoria de processos','Gestão de projetos — elaboração, análise e avaliação; modelos de gestão; etapas; metodologia ágil','Administração de recursos materiais','ESG']},
+  {id:'dc',nome:'Direito Constitucional',cor:'#6b7a5a',top:['Constituição Federal de 1988 — princípios fundamentais','Aplicabilidade das normas constitucionais — eficácia plena, contida, limitada e normas programáticas','Direitos e garantias fundamentais — direitos individuais e coletivos, direitos sociais, direitos de nacionalidade, direitos políticos, partidos políticos','Organização político-administrativa — Estado federal, União, estados, Distrito Federal, municípios e territórios','Administração Pública — disposições gerais e servidores públicos','Poder Executivo — atribuições e responsabilidades do Presidente da República','Poder Legislativo — estrutura, funcionamento e atribuições, processo legislativo, fiscalização contábil/financeira/orçamentária, CPIs','Poder Judiciário — disposições gerais, órgãos, CNJ (composição e competências)','Funções essenciais à justiça — Ministério Público e Advocacia Pública','Ordem Econômica e Financeira — princípios gerais da atividade econômica']},
+  {id:'da',nome:'Direito Administrativo',cor:'#7a5a5a',top:['Estado, governo e administração pública — conceitos e elementos','Direito administrativo — conceito, objeto e fontes','Ato administrativo — conceito, requisitos, atributos, classificação, espécies e extinção (cassação, anulação, revogação, convalidação); decadência administrativa','Agentes públicos — Lei nº 8.112/1990; cargo, emprego e função pública; provimento, vacância, efetividade, estabilidade, vitaliciedade; remuneração, direitos e deveres, responsabilidade, processo administrativo disciplinar','Poderes da administração — hierárquico, disciplinar, regulamentar e de polícia; uso e abuso do poder','Regime jurídico-administrativo — princípios expressos e implícitos da administração pública','Responsabilidade civil do Estado — evolução histórica, responsabilidade por ato comissivo e por omissão, causas excludentes e atenuantes, reparação do dano, direito de regresso','Serviços públicos — conceito, formas de prestação, delegação (concessão, permissão e autorização), classificação e princípios','Organização administrativa — centralização, descentralização; administração direta e indireta; autarquias, fundações, empresas públicas, SEM; entidades paraestatais e terceiro setor','Controle da administração pública — controle pela administração, judicial e legislativo; Lei nº 8.429/1992 (Improbidade Administrativa)','Processo administrativo — Lei nº 9.784/1999','Licitações e contratos administrativos — Lei nº 14.133/2021; Decreto nº 11.462/2023; fundamentos constitucionais']}
+]
+
+const MAT_RONDONIA = [
+  {id:'hr',nome:'História de Rondônia',cor:'#7a6040',top:['As bases da ocupação colonial da Amazônia','Políticas do Estado português para os vales do Guaporé e Madeira','A questão das fronteiras entre América Portuguesa e o Império Hispânico e a criação da Capitania de Mato Grosso','A economia colonial nos vales do Guaporé e Madeira — mineração, drogas do sertão, escravismo, contrabando e rotas fluviais','Colonização e povoamento no vale do Madeira e do Guaporé nos séculos XIX e XX','O advento da exploração seringueira e a questão das fronteiras','As diversas etapas da construção da Ferrovia Madeira-Mamoré (EFMM)','A Comissão Rondon e a instalação das linhas telegráficas','A criação dos Territórios Federais do Guaporé e de Rondônia','Os novos surtos de povoamento e a ampliação do extrativismo mineral','A implantação do Estado de Rondônia','Os projetos de colonização estatais e privados','A instalação da rodovia federal BR-364','História do Poder Legislativo de Rondônia']},
+  {id:'gr',nome:'Geografia de Rondônia',cor:'#5a7040',top:['Povoamento e ocupação dos vales do Madeira, Mamoré e Guaporé','Colonização ibérica na região — a colonização portuguesa no Vale do Guaporé','Os séculos XIX e XX e a exploração da borracha, poia e castanha','A construção da EFMM e da Linha Telegráfica','Território Federal do Guaporé/Rondônia','A Rodovia BR-364 e os garimpos','A ocupação recente da Amazônia e Rondônia — colonização agropastoril','O Estado de Rondônia, da criação às questões atuais','O ambiente amazônico — estruturas físicas e ambientais da região','Componentes do meio físico e ambiental do Estado de Rondônia','Populações e ocupação do espaço — processos migratórios, distribuição de renda, indicadores de qualidade de vida, populações tradicionais','As divisões regionais','Produção econômica regional','As questões socioambientais']}
+]
+
+const MAT_INFO = [
+  {id:'inf',nome:'Noções de Informática',cor:'#4a6b8a',top:['Arquitetura básica de computadores — hardware, componentes e funções; unidade central de processamento','Memória RAM, cache e tipos de armazenamento','Dispositivos de entrada e saída — teclado, mouse, monitor, impressoras, scanner','Dispositivos de armazenamento — discos rígidos, SSDs, pendrives, discos ópticos e armazenamento em nuvem','Conectores e portas de comunicação','Windows 10/11 — conceitos básicos de software e sistema operacional; programas e utilitários','Ambiente gráfico Windows — área de trabalho, janelas, ícones, atalhos de teclado','Pastas, tipos de arquivos, criação, cópia, exclusão e restauração de arquivos','MS Office 2021 e Microsoft 365 — Word, Excel, PowerPoint, OneDrive e Teams','Word — criação e edição de documentos, formatação, ícones e atalhos de teclado','Excel — criação e edição de planilhas, inserção de gráficos e tabelas, ícones e atalhos de teclado','PowerPoint — criação e edição de apresentações, inserção de gráficos e tabelas','OneDrive e Teams — compartilhamento e uso de recursos na nuvem','Google Workspace — Gmail, Documentos, Planilhas, Apresentações, Drive, Meet e Agenda','Google Workspace — colaboração em tempo real e armazenamento online','Internet — conceitos e características; navegadores (Microsoft Edge, Google Chrome, Mozilla Firefox)','Mecanismos de busca; figuras e imagens (formatos e uso)']}
+]
+
+const SCHEDULE = {
+  seg:[
+    {n:'Língua Portuguesa',t:'1h 15min',tag:'Conhecimentos Gerais'},
+    {n:'Direito Administrativo',t:'1h 15min',tag:'Conhecimentos Gerais'}
+  ],
+  ter:[
+    {n:'Direito Constitucional',t:'1h 15min',tag:'Conhecimentos Gerais'},
+    {n:'Administração Pública',t:'1h 15min',tag:'Conhecimentos Gerais'}
+  ],
+  qua:[
+    {n:'História de Rondônia',t:'1h 15min',tag:'História e Geografia'},
+    {n:'Geografia de Rondônia',t:'1h 15min',tag:'História e Geografia'}
+  ],
+  qui:[
+    {n:'Raciocínio Lógico-Matemático',t:'1h 15min',tag:'Conhecimentos Gerais'},
+    {n:'Noções de Informática',t:'1h 15min',tag:'Informática'}
+  ],
+  sex:[
+    {n:'Língua Portuguesa',t:'1h 15min',tag:'Conhecimentos Gerais'},
+    {n:'Revisão da semana',t:'1h 15min',tag:'Revisão'}
+  ],
+  sab:'questoes',
+  dom:'folga'
+}
+
+const QUESTOES = [
+  {id:1,mat:'História de Rondônia',enunciado:'A Ferrovia Madeira-Mamoré (EFMM) foi construída com o objetivo de contornar os trechos encachoeirados do Rio Madeira, permitindo o escoamento da produção de borracha da Bolívia e da região amazônica para os mercados internacionais.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. A EFMM foi construída para transpor os trechos não navegáveis do Rio Madeira, que possuía diversas corredeiras e cachoeiras. Seu objetivo era ligar Porto Velho a Guajará-Mirim, permitindo o escoamento da borracha produzida na Bolívia e na região do Acre.'},
+  {id:2,mat:'História de Rondônia',enunciado:'A Comissão Rondon, liderada pelo Marechal Cândido Mariano da Silva Rondon, atuou exclusivamente na demarcação de terras indígenas na região do atual Estado de Rondônia.',opcoes:['Certo','Errado'],correta:1,gabarito:'Errado. A Comissão Rondon tinha como principal objetivo a instalação de linhas telegráficas para integrar o interior do Brasil. Além disso, realizou exploração geográfica, levantamentos etnográficos e contato com povos indígenas, mas não se limitou à demarcação de terras.'},
+  {id:3,mat:'História de Rondônia',enunciado:'O Território Federal do Guaporé foi criado em 1943, durante o governo Getúlio Vargas, sendo posteriormente renomeado Território Federal de Rondônia em homenagem ao Marechal Cândido Rondon.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. O Território Federal do Guaporé foi criado pelo Decreto-Lei n. 5.812, de 13 de setembro de 1943. Em 1956 foi renomeado Território Federal de Rondônia, em homenagem ao Marechal Cândido Mariano da Silva Rondon. Em 1981, foi elevado a Estado.'},
+  {id:4,mat:'História de Rondônia',enunciado:'A BR-364 foi um fator fundamental para a ocupação demográfica de Rondônia a partir da década de 1970, pois facilitou a migração de colonos provenientes principalmente das regiões Sul e Sudeste do Brasil.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. A pavimentação e ampliação da BR-364, com financiamento do Banco Mundial, impulsionou fortemente a migração para Rondônia. Grande parte dos colonos veio do Paraná, Santa Catarina, Rio Grande do Sul e Minas Gerais, em busca de terras para agricultura.'},
+  {id:5,mat:'Geografia de Rondônia',enunciado:'O Estado de Rondônia possui fronteira internacional com a Bolívia, sendo o Rio Guaporé (Iténez) o principal elemento natural que delimita parte dessa fronteira.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. Rondônia faz fronteira com a Bolívia ao sul e ao oeste. O Rio Guaporé, denominado Iténez no lado boliviano, constitui parte importante do limite natural entre os dois países nessa região.'},
+  {id:6,mat:'Geografia de Rondônia',enunciado:'A economia de Rondônia é baseada exclusivamente no extrativismo vegetal, especialmente na exploração da borracha e da castanha-do-pará, atividades que predominam desde o século XIX.',opcoes:['Certo','Errado'],correta:1,gabarito:'Errado. Atualmente a economia de Rondônia é bastante diversificada. A agropecuária — especialmente a pecuária bovina e a produção de soja, café e milho — tem grande relevância. O extrativismo vegetal perdeu protagonismo com a queda da borracha e a chegada dos colonos agropecuaristas.'},
+  {id:7,mat:'Direito Administrativo',enunciado:'O poder de polícia administrativo, por ser discricionário, não encontra qualquer limitação no ordenamento jurídico brasileiro, podendo a Administração Pública exercê-lo de forma irrestrita para proteger o interesse público.',opcoes:['Certo','Errado'],correta:1,gabarito:'Errado. O poder de polícia, embora seja em regra discricionário, encontra limites nos direitos fundamentais, no princípio da proporcionalidade, na razoabilidade e no princípio da legalidade. Nenhum poder administrativo é irrestrito.'},
+  {id:8,mat:'Direito Administrativo',enunciado:'A convalidação de ato administrativo é cabível quando o vício que o acomete recai sobre o motivo ou o objeto do ato.',opcoes:['Certo','Errado'],correta:1,gabarito:'Errado. A convalidação é possível quando o vício recai sobre a competência (salvo exclusiva) ou sobre a forma (salvo exigência essencial). Vícios de motivo e objeto não admitem convalidação.'},
+  {id:9,mat:'Direito Constitucional',enunciado:'As normas constitucionais de eficácia plena são aquelas que já possuem plena aplicabilidade desde a promulgação da Constituição, sem necessitar de edição de norma regulamentadora.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. Normas de eficácia plena são autoaplicáveis, de produção imediata de todos os efeitos, sem dependência de lei regulamentadora. Exemplo clássico: o art. 2º da CF (separação dos poderes).'},
+  {id:10,mat:'Direito Constitucional',enunciado:'As Comissões Parlamentares de Inquérito (CPIs) podem decretar prisões preventivas, pois possuem poderes de investigação próprios das autoridades judiciais.',opcoes:['Certo','Errado'],correta:1,gabarito:'Errado. As CPIs podem determinar quebra de sigilo bancário, fiscal e telefônico, mas NÃO podem decretar prisões preventivas. Essa limitação decorre da cláusula de reserva de jurisdição — apenas o Judiciário pode decretar prisão preventiva.'},
+  {id:11,mat:'Noções de Informática',enunciado:'No Microsoft Excel, a fórmula =SOMA(A1:A10) calcula a soma de todos os valores contidos nas células de A1 até A10, incluindo os extremos A1 e A10.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. A notação de intervalo com dois pontos (:) no Excel indica um intervalo contínuo e inclusivo. Assim, A1:A10 inclui todas as células de A1 até A10, totalizando 10 células somadas pela função SOMA.'},
+  {id:12,mat:'Noções de Informática',enunciado:'O armazenamento em nuvem, como o Google Drive e o OneDrive, permite que os arquivos sejam acessados apenas pelo dispositivo no qual foram originalmente criados, não sendo possível o acesso por outros dispositivos.',opcoes:['Certo','Errado'],correta:1,gabarito:'Errado. Uma das principais vantagens do armazenamento em nuvem é justamente a possibilidade de acessar os arquivos de qualquer dispositivo com acesso à internet e autenticação na conta. O acesso multiplataforma é uma característica fundamental desse modelo.'},
+  {id:13,mat:'Noções de Informática',enunciado:'No Windows, o atalho de teclado Ctrl+Z desfaz a última ação realizada na maioria dos programas, sendo uma funcionalidade padrão do sistema operacional.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. O atalho Ctrl+Z é um padrão amplamente adotado em ambientes Windows para desfazer ações. Funciona na maioria dos aplicativos, incluindo os do pacote Office, editores de texto e o próprio explorador de arquivos do Windows.'},
+  {id:14,mat:'Administração Pública',enunciado:'A cultura organizacional é um conjunto de valores, crenças e pressupostos que orientam o comportamento dos membros da organização, podendo atuar tanto como fator de resistência quanto de facilitação de mudanças.',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. A cultura organizacional representa a "personalidade" da organização. Quando alinhada com a mudança, facilita a implementação. Quando arraigada em valores conservadores, pode resistir a transformações necessárias.'},
+  {id:15,mat:'Língua Portuguesa',enunciado:'Na frase "Os documentos que o diretor assinou ontem foram encaminhados ao arquivo", o pronome relativo "que" exerce a função de objeto direto do verbo "assinar".',opcoes:['Certo','Errado'],correta:0,gabarito:'Correto. O pronome relativo "que" retoma "documentos" e exerce a função de objeto direto de "assinar" — o diretor assinou o quê? Os documentos. A construção está correta e o pronome cumpre essa função sintática na oração adjetiva.'}
+]
+
+let sessions=JSON.parse(localStorage.getItem('c_sess')||'[]')
+let tSec=25*60,tTotal=25*60,tRunning=false,tInt=null
+let qAnswers=JSON.parse(localStorage.getItem('c_qanswers')||'{}')
+let qFilter='Todas'
+let chatHistory=[]
+
+function nav(id,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'))
+  document.getElementById('panel-'+id).classList.add('active')
+  if(el)el.classList.add('active')
+}
+
+function setT(min,btn){document.querySelectorAll('.preset').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(!tRunning){tSec=min*60;tTotal=tSec;updDisp()}}
+function updateSub(){const v=document.getElementById('timerMat').value;document.getElementById('timerSub').textContent=v||'Nenhuma matéria selecionada'}
+function toggleT(){
+  if(tRunning){clearInterval(tInt);tRunning=false;document.getElementById('tBtn').textContent='Continuar';document.getElementById('timerNum').classList.remove('running')}
+  else{if(tSec<=0){resetT();return}tRunning=true;document.getElementById('tBtn').textContent='Pausar';document.getElementById('timerNum').classList.add('running');document.getElementById('timerNum').classList.remove('done','warning');tInt=setInterval(tick,1000)}
+}
+function tick(){
+  tSec--;updDisp()
+  const el=document.getElementById('timerNum');el.classList.remove('warning')
+  if(tSec<=60&&tSec>0)el.classList.add('warning')
+  if(tSec<=0){clearInterval(tInt);tRunning=false;el.classList.remove('running','warning');el.classList.add('done');document.getElementById('tBtn').textContent='Iniciar';const mat=document.getElementById('timerMat').value||'Geral';const mins=Math.round(tTotal/60);addSession(mat,mins);notify('Sessão concluída — '+mins+' min de '+mat)}
+}
+function updDisp(){
+  const h=Math.floor(tSec/3600),m=Math.floor((tSec%3600)/60),s=tSec%60
+  document.getElementById('timerNum').textContent=h>0?`${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+  document.getElementById('tFill').style.width=(tTotal>0?(tSec/tTotal)*100:100)+'%'
+}
+function resetT(){clearInterval(tInt);tRunning=false;tSec=tTotal;document.getElementById('tBtn').textContent='Iniciar';document.getElementById('timerNum').className='timer-number';updDisp()}
+function addSession(mat,mins){
+  const now=new Date()
+  sessions.unshift({mat,mins,time:now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),date:now.toLocaleDateString('pt-BR')})
+  localStorage.setItem('c_sess',JSON.stringify(sessions));renderSessions();updStats();updMeta()
+}
+function renderSessions(){
+  const today=new Date().toLocaleDateString('pt-BR'),t=sessions.filter(s=>s.date===today)
+  const el=document.getElementById('sessoesList')
+  if(!t.length){el.innerHTML='<div class="empty">Nenhuma sessão registrada hoje.</div>';return}
+  el.innerHTML=t.map(s=>`<div class="session-row"><div><div class="s-mat">${s.mat}</div><div class="s-time">${s.time}</div></div><div class="s-dur">${s.mins}min</div></div>`).join('')
+  const total=t.reduce((a,s)=>a+s.mins,0)
+  document.getElementById('sSessoes').textContent=t.length
+  document.getElementById('sMin').textContent=total
+}
+function updMeta(){
+  const today=new Date().toLocaleDateString('pt-BR'),total=sessions.filter(s=>s.date===today).reduce((a,s)=>a+s.mins,0)
+  document.getElementById('metaVal').textContent=total+' / 150 min'
+  const fill=document.getElementById('metaFill')
+  fill.style.width=Math.min(100,Math.round((total/150)*100))+'%'
+  fill.className='meta-fill'+(total>=150?' completo':'')
+}
+function updStats(){
+  const total=sessions.reduce((a,s)=>a+s.mins,0)
+  document.getElementById('pHoras').textContent=total>=60?Math.floor(total/60)+'h'+(total%60?total%60+'m':''):total+'min'
+  document.getElementById('pSessoes').textContent=sessions.length
+  document.getElementById('pStreak').textContent=calcStreak()
+  const ans=Object.values(qAnswers),acertos=ans.filter(a=>a.correto).length
+  document.getElementById('pAcertos').textContent=ans.length?acertos+'/'+ans.length:'--'
+  renderProgBars()
+}
+function clearSess(){if(confirm('Limpar todo o histórico?')){sessions=[];localStorage.removeItem('c_sess');renderSessions();updStats();updMeta()}}
+function calcStreak(){
+  if(!sessions.length)return 0
+  const dates=[...new Set(sessions.map(s=>s.date))]
+  const toDate=str=>{const[d,m,y]=str.split('/');return new Date(y,m-1,d)}
+  const sorted=dates.sort((a,b)=>toDate(b)-toDate(a))
+  let streak=1
+  for(let i=0;i<sorted.length-1;i++){const diff=(toDate(sorted[i])-toDate(sorted[i+1]))/86400000;if(diff===1)streak++;else break}
+  return streak
+}
+
+const DAYS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],DAYKEYS=['dom','seg','ter','qua','qui','sex','sab']
+function buildWeek(){
+  const hoje=new Date(),dow=hoje.getDay()
+  document.getElementById('dayStrip').innerHTML=DAYS.map((d,i)=>{
+    const diff=i-dow,dt=new Date(hoje);dt.setDate(hoje.getDate()+diff)
+    const key=DAYKEYS[i],isFolga=key==='dom'
+    const done=JSON.parse(localStorage.getItem('c_done_'+key+'_'+dt.toLocaleDateString('pt-BR'))||'[]')
+    return `<div class="day-cell${i===dow?' today':''}${isFolga?' folga':''}${done.length>0?' studied':''}" onclick="${isFolga?'':`showDay('${key}','${d}',${dt.getDate()})`}">
+      <div class="day-name">${d}</div><div class="day-num">${dt.getDate()}</div><div class="day-dot"></div>
+    </div>`
+  }).join('')
+}
+// Mapa de tópicos por matéria (referencia MAT_GERAIS, MAT_RONDONIA, MAT_INFO)
+function getTopicos(nomeMat){
+  const all=[...MAT_GERAIS,...MAT_RONDONIA,...MAT_INFO]
+  const mat=all.find(m=>m.nome===nomeMat||m.nome.includes(nomeMat)||nomeMat.includes(m.nome))
+  return mat?mat.top:[]
+}
+
+function showDay(key,nome,num){
+  document.querySelectorAll('.day-cell').forEach(d=>d.classList.remove('active'))
+  event.currentTarget.classList.add('active')
+  const sched=SCHEDULE[key],el=document.getElementById('dayContent')
+  if(sched==='folga'){el.innerHTML='<div class="folga-msg"><div class="folga-title">Domingo — Descanso</div><div class="folga-sub">Descanse. A mente consolida o que aprendeu durante a semana.</div></div>';return}
+  const dt=new Date();dt.setDate(num)
+  const doneKey='c_done_'+key+'_'+dt.toLocaleDateString('pt-BR')
+  const done=JSON.parse(localStorage.getItem(doneKey)||'[]')
+  const items=sched==='questoes'?[
+    {n:'Questões de História e Geografia de Rondônia',t:'45 min',tag:'Prática'},
+    {n:'Questões de Direito Administrativo',t:'30 min',tag:'Prática'},
+    {n:'Questões de Direito Constitucional',t:'30 min',tag:'Prática'},
+    {n:'Questões de Informática',t:'30 min',tag:'Prática'},
+    {n:'Questões de Língua Portuguesa',t:'15 min',tag:'Prática'}
+  ]:sched
+
+  // Monta tópicos expandidos por matéria
+  let topicosHTML = ''
+  if(sched!=='questoes'){
+    topicosHTML = `<div style="margin-top:20px">` +
+    items.map(item=>{
+      const tops=getTopicos(item.n)
+      if(!tops.length) return ''
+      return `<div style="margin-bottom:16px">
+        <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500">${item.n}</div>
+        ${tops.map((t,i)=>`<div class="topic"><span class="topic-n">${i+1}</span>${t}</div>`).join('')}
+      </div>`
+    }).join('') + `</div>`
+  }
+
+  el.innerHTML=`<div style="padding-top:16px"><div class="card-label">${sched==='questoes'?'Sábado — Exame de Conhecimento (2h 30min)':nome+' — Sessões do dia (2h 30min)'}</div>
+  ${items.map((item,i)=>`<div class="sched-item${done.includes(i)?' done':''}" onclick="toggleDone('${key}',${i},${num})">
+    <div class="check-box"><span class="check-mark">&#10003;</span></div>
+    <div><div class="sched-name">${item.n}</div><div class="sched-tag">${item.tag}</div><div class="sched-dur">${item.t}</div></div>
+  </div>`).join('')}
+  ${topicosHTML}
+  </div>`
+}
+function toggleDone(key,idx,num){
+  const dt=new Date();dt.setDate(num)
+  const doneKey='c_done_'+key+'_'+dt.toLocaleDateString('pt-BR')
+  let done=JSON.parse(localStorage.getItem(doneKey)||'[]')
+  if(done.includes(idx))done=done.filter(i=>i!==idx);else done.push(idx)
+  localStorage.setItem(doneKey,JSON.stringify(done))
+  document.querySelectorAll('.sched-item').forEach((el,i)=>{if(done.includes(i))el.classList.add('done');else el.classList.remove('done')})
+  buildWeek()
+}
+
+function buildConteudo(){
+  document.getElementById('gerais').innerHTML=MAT_GERAIS.map(buildMat).join('')
+  document.getElementById('rondonia').innerHTML=MAT_RONDONIA.map(buildMat).join('')
+  document.getElementById('informatica').innerHTML=MAT_INFO.map(buildMat).join('')
+}
+function buildMat(m){return`<div class="mat-group"><button class="mat-header" onclick="toggleMat(this)"><span class="mat-dot" style="background:${m.cor}"></span><span class="mat-name">${m.nome}</span><span class="mat-count">${m.top.length} tópicos</span><span class="mat-arr">&#8250;</span></button><div class="mat-body">${m.top.map((t,i)=>`<div class="topic"><span class="topic-n">${i+1}</span>${t}</div>`).join('')}</div></div>`}
+function toggleMat(btn){btn.classList.toggle('open');btn.nextElementSibling.classList.toggle('open')}
+
+const MATERIAS_Q=[...new Set(QUESTOES.map(q=>q.mat))]
+function buildQFilter(){document.getElementById('qFilter').innerHTML=['Todas',...MATERIAS_Q].map(m=>`<button class="q-tag${m===qFilter?' active':''}" onclick="filterQ('${m}',this)">${m}</button>`).join('')}
+function filterQ(mat,btn){qFilter=mat;document.querySelectorAll('.q-tag').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderQ()}
+function renderQ(){
+  const qs=qFilter==='Todas'?QUESTOES:QUESTOES.filter(q=>q.mat===qFilter)
+  const acertos=Object.values(qAnswers).filter(a=>a.correto).length,total=Object.keys(qAnswers).length
+  const sb=document.getElementById('scoreBar')
+  if(total>0){sb.style.display='flex';document.getElementById('scoreAcertos').textContent=acertos;document.getElementById('scoreTotal').textContent=total}else sb.style.display='none'
+  document.getElementById('qList').innerHTML=qs.map(q=>{
+    const ans=qAnswers[q.id]
+    return`<div class="questao-card"><div class="q-num">Questão ${q.id}</div><div class="q-materia">${q.mat}</div><div class="q-enunciado">${q.enunciado}</div>
+    <div class="q-opcoes">${q.opcoes.map((op,i)=>{let cls='opcao'+(ans?' disabled':'');if(ans){if(i===q.correta)cls+=' correta';else if(i===ans.escolha&&!ans.correto)cls+=' errada'}return`<div class="${cls}" onclick="responder(${q.id},${i})"><span class="opcao-letra">${op}</span></div>`}).join('')}</div>
+    <div class="q-feedback${ans?' show':''}${ans?(ans.correto?' acerto':' erro'):''}">${ans?(ans.correto?'Correto. ':'Incorreto. ')+q.gabarito:''}</div>
+    <div>${!ans?`<button class="btn btn-ghost btn-sm" onclick="showGab(${q.id})">Ver gabarito</button>`:''}</div></div>`
+  }).join('')
+}
+function responder(id,escolha){const q=QUESTOES.find(q=>q.id===id);if(qAnswers[id])return;qAnswers[id]={escolha,correto:escolha===q.correta};localStorage.setItem('c_qanswers',JSON.stringify(qAnswers));renderQ();updStats()}
+function showGab(id){qAnswers[id]={escolha:-1,correto:false};localStorage.setItem('c_qanswers',JSON.stringify(qAnswers));renderQ()}
+function resetQuiz(){if(confirm('Resetar todas as respostas?')){qAnswers={};localStorage.removeItem('c_qanswers');renderQ();updStats()}}
+
+const GEMINI_KEY = 'AIzaSyBKXn2-Ybb4_RyWvMGWEm79ePy0u9P4iB0'
+
+const SYSTEM=`Você é a Professora Lia, tutora especializada exclusivamente para o concurso público para o qual Thaís Maia está se preparando.
+
+SEU ÚNICO PAPEL: Responder perguntas sobre as matérias do plano de estudos abaixo. Se a pergunta for sobre qualquer outro assunto, recuse educadamente dizendo: "Só posso ajudar com as matérias do seu plano de estudos. Qual dúvida posso esclarecer?"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CONTEÚDO PROGRAMÁTICO COMPLETO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📘 LÍNGUA PORTUGUESA
+Tópicos: Compreensão e interpretação de textos de gêneros variados; Reconhecimento de tipos e gêneros textuais; Domínio da ortografia oficial; Mecanismos de coesão textual (referenciação, substituição, conectores, tempos e modos verbais); Domínio da estrutura morfossintática (classes de palavras, coordenação, subordinação, pontuação, concordância verbal e nominal, regência verbal e nominal, crase, colocação de pronomes átonos); Reescrita de frases e parágrafos (significação das palavras, substituição de trechos, reorganização de orações).
+
+📘 RACIOCÍNIO LÓGICO-MATEMÁTICO E ANALÍTICO
+Tópicos: Estruturas lógicas; Diagramas lógicos; Trigonometria; Matrizes, determinantes e solução de sistemas lineares; Álgebra; Probabilidades; Combinações, arranjos e permutação; Geometria básica; Raciocínio analítico e argumentação (uso do senso crítico, tipos de argumentos falaciosos e apelativos, comunicação eficiente de argumentos).
+
+📘 ADMINISTRAÇÃO PÚBLICA
+Tópicos: Abordagens clássica, burocrática e sistêmica da administração; Evolução da administração pública no Brasil após 1930; Reformas administrativas; Nova gestão pública; Processo administrativo (planejamento, organização, direção e controle); Estrutura organizacional; Cultura organizacional; Gestão de pessoas (equilíbrio organizacional, objetivos e características, comportamento organizacional, motivação, liderança, desempenho); Noções de gestão de processos (mapeamento, análise e melhoria); Gestão de projetos (elaboração, análise e avaliação, modelos de gestão, etapas, metodologia ágil); Administração de recursos materiais; ESG.
+
+📘 DIREITO CONSTITUCIONAL (CF/1988)
+Tópicos: Constituição Federal de 1988 — princípios fundamentais; Aplicabilidade das normas constitucionais (eficácia plena, contida, limitada e normas programáticas); Direitos e garantias fundamentais (direitos individuais e coletivos, direitos sociais, de nacionalidade, políticos, partidos políticos); Organização político-administrativa (Estado federal, União, estados, DF, municípios e territórios); Administração Pública — disposições gerais e servidores públicos; Poder Executivo (atribuições e responsabilidades do Presidente); Poder Legislativo (estrutura, funcionamento, atribuições, processo legislativo, fiscalização contábil/financeira/orçamentária, CPIs); Poder Judiciário (disposições gerais, órgãos, CNJ); Funções essenciais à justiça (Ministério Público e Advocacia Pública); Ordem Econômica e Financeira — princípios gerais da atividade econômica.
+
+📘 DIREITO ADMINISTRATIVO
+Tópicos: Estado, governo e administração pública; Direito administrativo (conceito, objeto, fontes); Ato administrativo (conceito, requisitos, atributos, classificação, espécies e extinção — cassação, anulação, revogação, convalidação, decadência administrativa); Agentes públicos — Lei nº 8.112/1990 (cargo, emprego e função pública, provimento, vacância, efetividade, estabilidade, vitaliciedade, remuneração, direitos e deveres, responsabilidade, processo administrativo disciplinar); Poderes da administração (hierárquico, disciplinar, regulamentar e de polícia; uso e abuso do poder); Regime jurídico-administrativo (princípios expressos e implícitos); Responsabilidade civil do Estado (evolução histórica, ato comissivo e omissão, causas excludentes e atenuantes, reparação do dano, direito de regresso); Serviços públicos (conceito, formas de prestação, delegação, classificação, princípios); Organização administrativa (centralização, descentralização, administração direta e indireta, autarquias, fundações, empresas públicas, SEM, entidades paraestatais e terceiro setor); Controle da administração pública (controle pela administração, judicial e legislativo, Lei nº 8.429/1992 — Improbidade Administrativa); Processo administrativo — Lei nº 9.784/1999; Licitações e contratos administrativos — Lei nº 14.133/2021, Decreto nº 11.462/2023, fundamentos constitucionais.
+
+📘 HISTÓRIA DE RONDÔNIA
+Tópicos: As bases da ocupação colonial da Amazônia; Políticas do Estado português para os vales do Guaporé e Madeira; A questão das fronteiras entre América Portuguesa e o Império Hispânico e a criação da Capitania de Mato Grosso; A economia colonial nos vales do Guaporé e Madeira (mineração, drogas do sertão, escravismo, contrabando e rotas fluviais); Colonização e povoamento no vale do Madeira e do Guaporé nos séculos XIX e XX; O advento da exploração seringueira e a questão das fronteiras; As diversas etapas da construção da Ferrovia Madeira-Mamoré (EFMM); A Comissão Rondon e a instalação das linhas telegráficas; A criação dos Territórios Federais do Guaporé e de Rondônia; Os novos surtos de povoamento e a ampliação do extrativismo mineral; A implantação do Estado de Rondônia; Os projetos de colonização estatais e privados; A instalação da rodovia federal BR-364; História do Poder Legislativo de Rondônia.
+
+📘 GEOGRAFIA DE RONDÔNIA
+Tópicos: Povoamento e ocupação dos vales do Madeira, Mamoré e Guaporé; Colonização ibérica na região (colonização portuguesa no Vale do Guaporé); Os séculos XIX e XX e a exploração da borracha, poia e castanha; A construção da EFMM e da Linha Telegráfica; Território Federal do Guaporé/Rondônia; A Rodovia BR-364 e os garimpos; A ocupação recente da Amazônia e Rondônia (colonização agropastoril); O Estado de Rondônia da criação às questões atuais; O ambiente amazônico (estruturas físicas e ambientais da região); Componentes do meio físico e ambiental do Estado de Rondônia; Populações e ocupação do espaço (processos migratórios, distribuição de renda, indicadores de qualidade de vida, populações tradicionais); As divisões regionais; Produção econômica regional; As questões socioambientais.
+
+📘 NOÇÕES DE INFORMÁTICA
+Tópicos: Arquitetura básica de computadores (hardware, componentes e funções, CPU); Memória RAM, cache e tipos de armazenamento; Dispositivos de entrada e saída (teclado, mouse, monitor, impressoras, scanner); Dispositivos de armazenamento (discos rígidos, SSDs, pendrives, discos ópticos, armazenamento em nuvem); Conectores e portas de comunicação; Windows 10/11 (conceitos básicos, programas e utilitários); Ambiente gráfico Windows (área de trabalho, janelas, ícones, atalhos de teclado); Pastas, tipos de arquivos, criação, cópia, exclusão e restauração; MS Office 2021 e Microsoft 365 (Word, Excel, PowerPoint, OneDrive e Teams); Word (criação e edição, formatação, ícones e atalhos); Excel (criação e edição de planilhas, gráficos, tabelas, ícones e atalhos); PowerPoint (criação e edição, gráficos e tabelas); OneDrive e Teams (compartilhamento e uso na nuvem); Google Workspace (Gmail, Documentos, Planilhas, Apresentações, Drive, Meet e Agenda); Google Workspace (colaboração em tempo real e armazenamento online); Internet (conceitos, navegadores — Microsoft Edge, Google Chrome, Mozilla Firefox); Mecanismos de busca, formatos de imagens.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SEU ESTILO DE ENSINO:
+- Professora clara, objetiva e didática — quer ver Thaís passar no concurso
+- Use exemplos práticos e acessíveis
+- Informe como as bancas (especialmente Cebraspe/Cespe) costumam cobrar o tema quando relevante
+- Respostas bem estruturadas, sem prolixidade
+- Ao final de explicações longas, ofereça uma questão de treino estilo Certo/Errado se pertinente
+- Responda SEMPRE em português do Brasil
+- Se a pergunta não for sobre nenhuma das matérias acima, recuse com: "Só posso ajudar com as matérias do seu plano de estudos. Qual dúvida posso esclarecer?"
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
+
+const QUICKQS=['O que foi a Ferrovia Madeira-Mamoré?','Principais rios e fronteiras de Rondônia','Diferença entre anulação e revogação','Atalhos mais cobrados do Excel','O que é o princípio da legalidade?','Como funciona a eficácia das normas constitucionais?']
+
+function buildChat(){
+  document.getElementById('quickQs').innerHTML=QUICKQS.map(q=>`<button class="quick-q" onclick="quickAsk('${q}')">${q}</button>`).join('')
+  addMsg('ai','Olá! Sou a Professora Lia. Estou aqui para ajudar com as matérias do seu plano de estudos — Língua Portuguesa, Raciocínio Lógico, Administração Pública, Direito Constitucional, Direito Administrativo, História e Geografia de Rondônia, e Informática. Por onde quer começar?')
+}
+async function sendChat(){
+  const inp=document.getElementById('chatIn'),txt=inp.value.trim();if(!txt)return
+  inp.value='';addMsg('user',txt);chatHistory.push({role:'user',parts:[{text:txt}]});showTyping()
+  try{
+    const payload={
+      system_instruction:{parts:[{text:SYSTEM}]},
+      contents:chatHistory.slice(-12),
+      generationConfig:{maxOutputTokens:1000}
+    }
+    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    const d=await r.json();removeTyping()
+    const rep=d.candidates?.[0]?.content?.parts?.[0]?.text||'Não consegui responder agora. Tente novamente.'
+    chatHistory.push({role:'model',parts:[{text:rep}]});addMsg('ai',rep)
+  }catch(e){removeTyping();addMsg('ai','Problema de conexão. Tente novamente.')}
+}
+function quickAsk(txt){document.getElementById('chatIn').value=txt;sendChat()}
+function chatKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendChat()}}
+function addMsg(role,txt){
+  const el=document.getElementById('chatMsgs'),d=document.createElement('div');d.className='msg '+role
+  d.innerHTML=`<div class="msg-av ${role==='ai'?'ai-av':'user-av'}">${role==='ai'?'L':'T'}</div><div class="bubble">${txt.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}</div>`
+  el.appendChild(d);el.scrollTop=el.scrollHeight
+}
+function showTyping(){const el=document.getElementById('chatMsgs'),d=document.createElement('div');d.className='msg ai';d.id='typing';d.innerHTML='<div class="msg-av ai-av">L</div><div class="bubble"><div class="typing-dots"><span></span><span></span><span></span></div></div>';el.appendChild(d);el.scrollTop=el.scrollHeight}
+function removeTyping(){document.getElementById('typing')?.remove()}
+
+function renderProgBars(){
+  const all=[...MAT_GERAIS,...MAT_RONDONIA,...MAT_INFO],map={}
+  sessions.forEach(s=>{map[s.mat]=(map[s.mat]||0)+s.mins})
+  const max=Math.max(...Object.values(map),60)
+  document.getElementById('progBars').innerHTML=all.map(m=>{
+    const mins=map[m.nome]||0,pct=Math.min(100,Math.round((mins/max)*100))
+    return`<div class="prog-row"><div class="prog-h"><span class="prog-mat">${m.nome}</span><span class="prog-min">${mins}min</span></div><div class="prog-bg"><div class="prog-bar" style="width:${pct}%;background:${m.cor}"></div></div></div>`
+  }).join('')
+}
+
+function notify(msg){const d=document.createElement('div');d.className='notif';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),4000)}
+
+buildWeek();buildConteudo();buildQFilter();renderQ();buildChat()
+renderSessions();updMeta();updStats()
+document.getElementById('sStreak').textContent=calcStreak()
+</script>
+</body>
+</html>
