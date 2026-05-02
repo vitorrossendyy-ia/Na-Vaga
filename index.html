@@ -634,17 +634,17 @@ function buildChat(){
 }
 async function sendChat(){
   const inp=document.getElementById('chatIn'),txt=inp.value.trim();if(!txt)return
-  inp.value='';addMsg('user',txt);chatHistory.push({role:'user',parts:[{text:txt}]});showTyping()
+  inp.value='';addMsg('user',txt);chatHistory.push({role:'user',content:txt});showTyping()
   try{
     const payload={
-      system_instruction:{parts:[{text:SYSTEM}]},
-      contents:chatHistory.slice(-12),
-      generationConfig:{maxOutputTokens:1000}
+      model:'llama-3.3-70b-versatile',
+      max_tokens:1000,
+      messages:[{role:'system',content:SYSTEM},...chatHistory.slice(-12)]
     }
-    const r=await fetch(`/api/gemini`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    const r=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
     const d=await r.json();removeTyping()
-    const rep=d.candidates?.[0]?.content?.parts?.[0]?.text||'Não consegui responder agora. Tente novamente.'
-    chatHistory.push({role:'model',parts:[{text:rep}]});addMsg('ai',rep)
+    const rep=d.choices?.[0]?.message?.content||'Não consegui responder agora. Tente novamente.'
+    chatHistory.push({role:'assistant',content:rep});addMsg('ai',rep)
   }catch(e){removeTyping();addMsg('ai','Problema de conexão. Tente novamente.')}
 }
 function quickAsk(txt){document.getElementById('chatIn').value=txt;sendChat()}
