@@ -73,6 +73,55 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .s-dur{font-family:'Instrument Serif',serif;font-size:15px;color:var(--accent)}
 .empty{font-size:12px;color:var(--dim);text-align:center;padding:20px 0}
 .day-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:24px}
+.cron-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:10px 16px;cursor:pointer;transition:all .2s}
+.cron-tab:hover{color:var(--text)}
+.cron-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cal-dname{text-align:center;font-size:10px;color:var(--muted);padding:6px 0;letter-spacing:.6px;text-transform:uppercase;font-weight:600}
+.cal-day{background:var(--bg2);border:1px solid var(--border);border-radius:6px;min-height:70px;padding:6px;cursor:pointer;transition:border-color .2s;position:relative}
+.cal-day:hover{border-color:var(--accent2)}
+.cal-day.cal-empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.cal-today{border-color:var(--accent)}
+.cal-day.cal-dom{opacity:.4;cursor:default}
+.cal-num{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:3px}
+.cal-day.cal-today .cal-num{color:var(--accent)}
+.cal-tag{font-size:9px;padding:1px 4px;border-radius:2px;font-weight:600;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cal-dot{position:absolute;top:5px;right:5px;width:7px;height:7px;border-radius:50%}
+.week-btn{background:var(--bg2);border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 13px;border-radius:6px;cursor:pointer;transition:all .2s}
+.week-btn:hover{color:var(--text)}
+.week-btn.active{border-color:var(--accent);color:var(--accent)}
+.week-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:700px){.week-cards{grid-template-columns:1fr}}
+.wcard{background:var(--bg2);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.wcard.wcard-hoje{border-color:var(--accent)}
+.wcard-head{padding:10px 14px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.wcard-dname{font-weight:600;font-size:13px}
+.wcard-pbar{height:2px;background:var(--bg3)}
+.wcard-pfill{height:100%;background:var(--accent);transition:width .3s}
+.wcard-body{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.wsess{display:flex;align-items:flex-start;gap:8px}
+.wsess-chk{width:18px;height:18px;border:2px solid var(--border);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:11px;font-weight:700;color:transparent;cursor:pointer}
+.wsess-chk:hover{border-color:var(--accent)}
+.wsess-chk.chk-on{background:var(--accent);border-color:var(--accent);color:#0f0f0f}
+.wsess-time{font-size:10px;color:var(--accent);font-weight:600;margin-bottom:1px}
+.wsess-mat{font-size:12px;font-weight:600;cursor:pointer}
+.wsess-mat:hover{color:var(--accent)}
+.wsess-tops{font-size:11px;color:var(--muted);line-height:1.5;margin-top:2px}
+.wsess.sess-ok .wsess-mat{text-decoration:line-through;color:var(--muted)}
+.cron-modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;align-items:center;justify-content:center;padding:16px}
+.cron-modal-ov.open{display:flex}
+.cron-modal{background:var(--bg2);border:1px solid var(--accent2);border-radius:10px;padding:24px;max-width:440px;width:100%;max-height:80vh;overflow-y:auto}
+.cron-modal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.cron-modal-title{font-family:'Instrument Serif',serif;font-size:1.1rem;color:var(--accent)}
+.cron-modal-close{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;padding:2px;line-height:1}
+.cron-modal-close:hover{color:var(--text)}
+.cron-sess-block{background:var(--bg3);border-radius:7px;padding:12px;margin-bottom:10px}
+.cron-sess-time{font-size:10px;color:var(--accent);font-weight:600;margin-bottom:4px}
+.cron-sess-mat{font-size:13px;font-weight:600;margin-bottom:8px}
+.top-item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);padding:4px 0;cursor:pointer;transition:color .2s}
+.top-item:hover{color:var(--text)}
+.top-item input[type=checkbox]{accent-color:var(--accent);width:13px;height:13px}
+.top-item.top-done{color:var(--muted);text-decoration:line-through}
 .day-cell{border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 8px;text-align:center;cursor:pointer;transition:all 0.15s}
 .day-cell:hover{border-color:var(--border2)}
 .day-cell.active{border-color:var(--accent);background:rgba(200,169,110,0.06)}
@@ -263,23 +312,74 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 
 <!-- CRONOGRAMA -->
 <div id="panel-cronograma" class="panel">
-  <div class="page-title">Cronograma Semanal</div>
-  <div class="page-sub">2h 30min por dia — sábado: questões — domingo: descanso</div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="day-strip" id="dayStrip"></div>
-    <div id="dayContent"></div>
-  </div>
-  <div class="card">
-    <div class="card-label">Distribuição recomendada</div>
-    <div style="font-size:13px;color:var(--muted);line-height:2.2">
-      <div>Segunda — <span style="color:var(--text)">Língua Portuguesa + Direito Administrativo</span></div>
-      <div>Terça — <span style="color:var(--text)">Direito Constitucional + Administração Pública</span></div>
-      <div>Quarta — <span style="color:var(--text)">História de Rondônia + Geografia de Rondônia</span></div>
-      <div>Quinta — <span style="color:var(--text)">Raciocínio Lógico + Informática</span></div>
-      <div>Sexta — <span style="color:var(--text)">Língua Portuguesa + Revisão da semana</span></div>
-      <div>Sábado — <span style="color:var(--text)">Exames de Conhecimento (2h 30min)</span></div>
-      <div>Domingo — <span style="color:var(--text)">Descanso</span></div>
+  <div class="page-title">Cronograma de Estudos</div>
+  <div class="page-sub">16h00–18h45 · 2 matérias por dia · Início: 04/05/2026</div>
+
+  <!-- STATS -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px">
+    <div class="card" style="text-align:center;padding:14px 8px">
+      <div style="font-family:'Instrument Serif',serif;font-size:1.8rem;color:var(--accent)" id="cst-dias">0</div>
+      <div style="font-size:11px;color:var(--muted)">Dias estudados</div>
     </div>
+    <div class="card" style="text-align:center;padding:14px 8px">
+      <div style="font-family:'Instrument Serif',serif;font-size:1.8rem;color:var(--accent)" id="cst-top">0</div>
+      <div style="font-size:11px;color:var(--muted)">Tópicos feitos</div>
+    </div>
+    <div class="card" style="text-align:center;padding:14px 8px">
+      <div style="font-family:'Instrument Serif',serif;font-size:1.8rem;color:var(--accent)" id="cst-hrs">0h</div>
+      <div style="font-size:11px;color:var(--muted)">Horas estimadas</div>
+    </div>
+    <div class="card" style="text-align:center;padding:14px 8px">
+      <div style="font-family:'Instrument Serif',serif;font-size:1.8rem;color:var(--accent)" id="cst-seq">0</div>
+      <div style="font-size:11px;color:var(--muted)">Dias seguidos</div>
+    </div>
+  </div>
+
+  <!-- ABAS -->
+  <div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:18px">
+    <button class="cron-tab active" id="ctab-cal" onclick="cronTab('cal')">Calendário</button>
+    <button class="cron-tab" id="ctab-semana" onclick="cronTab('semana')">Plano Semanal</button>
+    <button class="cron-tab" id="ctab-hoje" onclick="cronTab('hoje')">Hoje</button>
+  </div>
+
+  <!-- CALENDÁRIO -->
+  <div id="cview-cal">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-family:'Instrument Serif',serif;font-size:1.2rem;color:var(--accent)" id="cal-lbl"></div>
+      <div style="display:flex;gap:6px">
+        <button onclick="calNav(-1)" style="background:var(--bg2);border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:6px;cursor:pointer">&#8592;</button>
+        <button onclick="calNav(1)"  style="background:var(--bg2);border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:6px;cursor:pointer">&#8594;</button>
+      </div>
+    </div>
+    <!-- legenda -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;font-size:11px;color:var(--muted)">
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#1a3a5c;margin-right:4px"></span>LP</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#3a1a1a;margin-right:4px"></span>DA</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#1a3a1a;margin-right:4px"></span>DC</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#3a2a1a;margin-right:4px"></span>AP</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#2a1a3a;margin-right:4px"></span>RL</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#1a3a3a;margin-right:4px"></span>HR</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#3a3a1a;margin-right:4px"></span>GR</span>
+      <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#2a2a3a;margin-right:4px"></span>Inf</span>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+  </div>
+
+  <!-- PLANO SEMANAL -->
+  <div id="cview-semana" style="display:none">
+    <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+      <button class="week-btn active" onclick="selectSemana(0,this)">Semana 1</button>
+      <button class="week-btn" onclick="selectSemana(1,this)">Semana 2</button>
+      <button class="week-btn" onclick="selectSemana(2,this)">Semana 3</button>
+      <button class="week-btn" onclick="selectSemana(3,this)">Semana 4</button>
+      <span style="font-size:12px;color:var(--muted);align-self:center;margin-left:4px" id="semana-range"></span>
+    </div>
+    <div class="week-cards" id="week-cards"></div>
+  </div>
+
+  <!-- HOJE -->
+  <div id="cview-hoje" style="display:none">
+    <div id="hoje-cron"></div>
   </div>
 </div>
 
@@ -486,71 +586,292 @@ function calcStreak(){
   return streak
 }
 
-const DAYS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],DAYKEYS=['dom','seg','ter','qua','qui','sex','sab']
-function buildWeek(){
-  const hoje=new Date(),dow=hoje.getDay()
-  document.getElementById('dayStrip').innerHTML=DAYS.map((d,i)=>{
-    const diff=i-dow,dt=new Date(hoje);dt.setDate(hoje.getDate()+diff)
-    const key=DAYKEYS[i],isFolga=key==='dom'
-    const done=JSON.parse(localStorage.getItem('c_done_'+key+'_'+dt.toLocaleDateString('pt-BR'))||'[]')
-    return `<div class="day-cell${i===dow?' today':''}${isFolga?' folga':''}${done.length>0?' studied':''}" onclick="${isFolga?'':`showDay('${key}','${d}',${dt.getDate()})`}">
-      <div class="day-name">${d}</div><div class="day-num">${dt.getDate()}</div><div class="day-dot"></div>
-    </div>`
-  }).join('')
-}
-// Mapa de tópicos por matéria (referencia MAT_GERAIS, MAT_RONDONIA, MAT_INFO)
-function getTopicos(nomeMat){
-  const all=[...MAT_GERAIS,...MAT_RONDONIA,...MAT_INFO]
-  const mat=all.find(m=>m.nome===nomeMat||m.nome.includes(nomeMat)||nomeMat.includes(m.nome))
-  return mat?mat.top:[]
+// ═══════════════════════════════════════════════
+// CRONOGRAMA NOVO — calendário + checklist + plano semanal
+// ═══════════════════════════════════════════════
+const CRON_START = new Date(2026,4,4) // 04/05/2026 segunda
+const CRON_TODAY = new Date()
+const MESES_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+const DIAS_PT  = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+
+// Sessões por dia da semana (0=Dom..6=Sáb)
+const CRON_SCHED = {
+  1:[
+    {mat:'Língua Portuguesa',cls:'lp',time:'16h00–17h15',
+     tops:['Interpretação de texto: ideia central e implícita','Coesão textual: referenciação e sequenciação','Tipos de texto: narrativo, descritivo, dissertativo','Funções da linguagem']},
+    {mat:'Direito Administrativo',cls:'da',time:'17h30–18h45',
+     tops:['Princípios da Adm. Pública: LIMPE','Atos administrativos: conceito e elementos','Classificação dos atos administrativos','Extinção dos atos administrativos']}
+  ],
+  2:[
+    {mat:'Direito Constitucional',cls:'dc',time:'16h00–17h15',
+     tops:['Princípios fundamentais da CF/88 (art. 1º ao 4º)','Direitos individuais e coletivos (art. 5º)','Direitos sociais (art. 6º ao 11)','Organização do Estado']},
+    {mat:'Administração Pública',cls:'ap',time:'17h30–18h45',
+     tops:['Conceito e evolução da Adm. Pública','Modelos: patrimonialismo, burocracia e gerencialismo','Reforma do Estado brasileiro (PDRAE)','Estrutura organizacional pública']}
+  ],
+  3:[
+    {mat:'História de Rondônia',cls:'hr',time:'16h00–17h15',
+     tops:['Colonização e povos indígenas de Rondônia','Ciclo da borracha e EFMM','Comissão Rondon e o telégrafo','Criação do Território Federal de Rondônia']},
+    {mat:'Geografia de Rondônia',cls:'gr',time:'17h30–18h45',
+     tops:['Localização e limites de Rondônia','Relevo, hidrografia e clima','Biomas: Amazônia e Cerrado em RO','Municípios e regiões geográficas']}
+  ],
+  4:[
+    {mat:'Raciocínio Lógico-Matemático',cls:'rl',time:'16h00–17h15',
+     tops:['Proposições e conectivos lógicos','Tabelas-verdade','Equivalências lógicas','Argumentos e validade']},
+    {mat:'Noções de Informática',cls:'inf',time:'17h30–18h45',
+     tops:['Hardware: componentes e periféricos','Software: sistemas operacionais','Windows 10/11: configurações e recursos','Redes, internet e navegadores']}
+  ],
+  5:[
+    {mat:'Língua Portuguesa',cls:'lp',time:'16h00–17h15',
+     tops:['Ortografia e acentuação (Acordo Ortográfico)','Classes de palavras: morfologia aplicada','Concordância verbal e nominal','Regência verbal e nominal']},
+    {mat:'Revisão da Semana',cls:'rev',time:'17h30–18h45',
+     tops:['Revisão dos pontos de maior dificuldade','Releitura de anotações e resumos','Mapas mentais ou fichas rápidas','Perguntas para a Professora Lia']}
+  ],
+  6:[
+    {mat:'Exame de Conhecimento',cls:'quest',time:'09h00–11h30',
+     tops:['1 prova completa (45 questões) da matéria da semana','Revisão do gabarito e análise de erros','Reforço nos conteúdos com mais erros']}
+  ],
+  0:null // descanso
 }
 
-function showDay(key,nome,num){
-  document.querySelectorAll('.day-cell').forEach(d=>d.classList.remove('active'))
-  event.currentTarget.classList.add('active')
-  const sched=SCHEDULE[key],el=document.getElementById('dayContent')
-  if(sched==='folga'){el.innerHTML='<div class="folga-msg"><div class="folga-title">Domingo — Descanso</div><div class="folga-sub">Descanse. A mente consolida o que aprendeu durante a semana.</div></div>';return}
-  const dt=new Date();dt.setDate(num)
-  const doneKey='c_done_'+key+'_'+dt.toLocaleDateString('pt-BR')
-  const done=JSON.parse(localStorage.getItem(doneKey)||'[]')
-  const items=sched==='questoes'?[
-    {n:'Questões de História e Geografia de Rondônia',t:'45 min',tag:'Prática'},
-    {n:'Questões de Direito Administrativo',t:'30 min',tag:'Prática'},
-    {n:'Questões de Direito Constitucional',t:'30 min',tag:'Prática'},
-    {n:'Questões de Informática',t:'30 min',tag:'Prática'},
-    {n:'Questões de Língua Portuguesa',t:'15 min',tag:'Prática'}
-  ]:sched
+const CLS_COLORS = {
+  lp:{bg:'#1a3a5c',fg:'#7ec8e3'},
+  da:{bg:'#3a1a1a',fg:'#e87c7c'},
+  dc:{bg:'#1a3a1a',fg:'#7ee87c'},
+  ap:{bg:'#3a2a1a',fg:'#e8c47c'},
+  rl:{bg:'#2a1a3a',fg:'#c47ce8'},
+  hr:{bg:'#1a3a3a',fg:'#7ce8e8'},
+  gr:{bg:'#3a3a1a',fg:'#e8e87c'},
+  inf:{bg:'#2a2a3a',fg:'#9c9ce8'},
+  rev:{bg:'#2a1a2a',fg:'#e87ce8'},
+  quest:{bg:'#1a2a1a',fg:'#8fe87c'}
+}
 
-  // Monta tópicos expandidos por matéria
-  let topicosHTML = ''
-  if(sched!=='questoes'){
-    topicosHTML = `<div style="margin-top:20px">` +
-    items.map(item=>{
-      const tops=getTopicos(item.n)
-      if(!tops.length) return ''
-      return `<div style="margin-bottom:16px">
-        <div style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:500">${item.n}</div>
-        ${tops.map((t,i)=>`<div class="topic"><span class="topic-n">${i+1}</span>${t}</div>`).join('')}
-      </div>`
-    }).join('') + `</div>`
+let calMonth = CRON_TODAY.getMonth()
+let calYear  = CRON_TODAY.getFullYear()
+let cronWeek = 0
+let cronModalDate = null
+
+function cronDkey(d){ return `cron_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}` }
+function cronLoad(d){ try{return JSON.parse(localStorage.getItem(cronDkey(d))||'[]')}catch(e){return[]} }
+function cronSave(d,arr){ localStorage.setItem(cronDkey(d),JSON.stringify(arr)) }
+function cronTopKey(si,ti){ return `${si}_${ti}` }
+
+function cronTab(tab){
+  document.querySelectorAll('.cron-tab').forEach(b=>b.classList.remove('active'))
+  document.getElementById('ctab-'+tab).classList.add('active')
+  document.getElementById('cview-cal').style.display    = tab==='cal'    ? '' : 'none'
+  document.getElementById('cview-semana').style.display = tab==='semana' ? '' : 'none'
+  document.getElementById('cview-hoje').style.display   = tab==='hoje'   ? '' : 'none'
+}
+
+// ── CALENDÁRIO ──
+function buildCal(){
+  document.getElementById('cal-lbl').textContent = MESES_PT[calMonth]+' '+calYear
+  const grid = document.getElementById('cal-grid')
+  grid.innerHTML = ''
+  DIAS_PT.forEach(d=>{ const el=document.createElement('div');el.className='cal-dname';el.textContent=d;grid.appendChild(el) })
+  const firstDow = new Date(calYear,calMonth,1).getDay()
+  const dias = new Date(calYear,calMonth+1,0).getDate()
+  for(let i=0;i<firstDow;i++){ const el=document.createElement('div');el.className='cal-day cal-empty';grid.appendChild(el) }
+  for(let d=1;d<=dias;d++){
+    const date = new Date(calYear,calMonth,d)
+    const dow  = date.getDay()
+    const sched= CRON_SCHED[dow]
+    const isToday = date.toDateString()===CRON_TODAY.toDateString()
+    const checked = cronLoad(date)
+    const el = document.createElement('div')
+    el.className = 'cal-day'+(dow===0?' cal-dom':'')+(isToday?' cal-today':'')
+    // número
+    const num=document.createElement('div');num.className='cal-num';num.textContent=d;el.appendChild(num)
+    // tags
+    if(sched){
+      sched.forEach(s=>{
+        const c=CLS_COLORS[s.cls]||{bg:'#222',fg:'#888'}
+        const tag=document.createElement('div')
+        tag.className='cal-tag'
+        tag.style.cssText=`background:${c.bg};color:${c.fg}`
+        tag.textContent=s.mat.split(' ')[0]==='Noções'?'Inf':s.mat.split(' ')[0]==='Exame'?'Quest':s.mat.split(' ')[0]==='Revisão'?'Rev':s.mat.split(' ')[0]
+        el.appendChild(tag)
+      })
+      // dot de progresso
+      const totalTops = sched.reduce((a,s)=>a+s.tops.length,0)
+      const doneTops  = checked.length
+      if(doneTops>0 && date>=CRON_START){
+        const dot=document.createElement('div');dot.className='cal-dot'
+        dot.style.background = doneTops>=totalTops ? '#4caf82' : 'var(--accent)'
+        el.appendChild(dot)
+      }
+      if(date>=CRON_START){ el.style.cursor='pointer'; el.onclick=()=>openCronModal(date) }
+    } else if(dow===0){
+      const tag=document.createElement('div');tag.className='cal-tag';tag.style.cssText='background:#1a1a1a;color:#444';tag.textContent='Descanso';el.appendChild(tag)
+    }
+    grid.appendChild(el)
   }
-
-  el.innerHTML=`<div style="padding-top:16px"><div class="card-label">${sched==='questoes'?'Sábado — Exame de Conhecimento (2h 30min)':nome+' — Sessões do dia (2h 30min)'}</div>
-  ${items.map((item,i)=>`<div class="sched-item${done.includes(i)?' done':''}" onclick="toggleDone('${key}',${i},${num})">
-    <div class="check-box"><span class="check-mark">&#10003;</span></div>
-    <div><div class="sched-name">${item.n}</div><div class="sched-tag">${item.tag}</div><div class="sched-dur">${item.t}</div></div>
-  </div>`).join('')}
-  ${topicosHTML}
-  </div>`
+  buildCronStats()
 }
-function toggleDone(key,idx,num){
-  const dt=new Date();dt.setDate(num)
-  const doneKey='c_done_'+key+'_'+dt.toLocaleDateString('pt-BR')
-  let done=JSON.parse(localStorage.getItem(doneKey)||'[]')
-  if(done.includes(idx))done=done.filter(i=>i!==idx);else done.push(idx)
-  localStorage.setItem(doneKey,JSON.stringify(done))
-  document.querySelectorAll('.sched-item').forEach((el,i)=>{if(done.includes(i))el.classList.add('done');else el.classList.remove('done')})
-  buildWeek()
+function calNav(d){ calMonth+=d; if(calMonth<0){calMonth=11;calYear--} if(calMonth>11){calMonth=0;calYear++} buildCal() }
+
+// ── MODAL TÓPICOS ──
+function openCronModal(date){
+  cronModalDate=date
+  const dow=date.getDay(), sched=CRON_SCHED[dow]
+  if(!sched)return
+  const checked=cronLoad(date)
+  const dname=DIAS_PT[dow]+', '+date.getDate()+' de '+MESES_PT[date.getMonth()]
+  document.getElementById('cron-modal-title').textContent=dname
+  const body=document.getElementById('cron-modal-body')
+  body.innerHTML=''
+  sched.forEach((sess,si)=>{
+    const block=document.createElement('div');block.className='cron-sess-block'
+    block.innerHTML=`<div class="cron-sess-time">${sess.time} · ${sess.mat}</div>`
+    const tlist=document.createElement('div')
+    sess.tops.forEach((top,ti)=>{
+      const key=cronTopKey(si,ti), done=checked.includes(key)
+      const item=document.createElement('label');item.className='top-item'+(done?' top-done':'')
+      const cb=document.createElement('input');cb.type='checkbox';cb.checked=done
+      cb.onchange=()=>{
+        const c2=cronLoad(cronModalDate)
+        if(cb.checked){if(!c2.includes(key))c2.push(key);item.classList.add('top-done')}
+        else{const i=c2.indexOf(key);if(i>=0)c2.splice(i,1);item.classList.remove('top-done')}
+        cronSave(cronModalDate,c2)
+        buildCal();buildSemana(cronWeek);buildHoje();buildCronStats()
+      }
+      item.appendChild(cb);item.appendChild(document.createTextNode(top))
+      tlist.appendChild(item)
+    })
+    block.appendChild(tlist);body.appendChild(block)
+  })
+  document.getElementById('cron-modal-ov').classList.add('open')
+}
+function closeCronModal(e){ if(!e||e.target===document.getElementById('cron-modal-ov'))document.getElementById('cron-modal-ov').classList.remove('open') }
+
+// ── PLANO SEMANAL ──
+function selectSemana(idx,btn){
+  cronWeek=idx
+  document.querySelectorAll('.week-btn').forEach(b=>b.classList.remove('active'))
+  btn.classList.add('active')
+  buildSemana(idx)
+}
+
+function buildSemana(wIdx){
+  const wStart=new Date(CRON_START); wStart.setDate(CRON_START.getDate()+wIdx*7)
+  const wEnd=new Date(wStart); wEnd.setDate(wStart.getDate()+5)
+  document.getElementById('semana-range').textContent=
+    wStart.getDate()+'/'+(wStart.getMonth()+1)+' – '+wEnd.getDate()+'/'+(wEnd.getMonth()+1)
+  const container=document.getElementById('week-cards')
+  container.innerHTML=''
+  const dias=[1,2,3,4,5,6] // seg a sab
+  const dnomes=['Segunda','Terça','Quarta','Quinta','Sexta','Sábado']
+  dias.forEach((dow,di)=>{
+    const date=new Date(wStart); date.setDate(wStart.getDate()+di)
+    const sched=CRON_SCHED[dow]
+    const checked=cronLoad(date)
+    const isToday=date.toDateString()===CRON_TODAY.toDateString()
+    const card=document.createElement('div')
+    card.className='wcard'+(isToday?' wcard-hoje':'')
+    // header
+    const head=document.createElement('div');head.className='wcard-head'
+    head.innerHTML=`<div class="wcard-dname">${dnomes[di]}</div><div style="font-size:11px;color:var(--muted)">${date.getDate()}/${date.getMonth()+1}</div>`
+    card.appendChild(head)
+    // barra progresso
+    if(sched){
+      const totalT=sched.reduce((a,s)=>a+s.tops.length,0)
+      const doneT=checked.length
+      const pct=totalT>0?Math.round(doneT/totalT*100):0
+      const pbar=document.createElement('div');pbar.className='wcard-pbar'
+      const pfill=document.createElement('div');pfill.className='wcard-pfill';pfill.style.width=pct+'%'
+      pbar.appendChild(pfill);card.appendChild(pbar)
+    }
+    // body
+    const body=document.createElement('div');body.className='wcard-body'
+    if(!sched){
+      body.innerHTML='<div style="text-align:center;color:var(--muted);font-size:12px;padding:8px">🌿 Descanso</div>'
+    } else {
+      sched.forEach((sess,si)=>{
+        const allDone=sess.tops.every((_,ti)=>checked.includes(cronTopKey(si,ti)))
+        const sessEl=document.createElement('div');sessEl.className='wsess'+(allDone?' sess-ok':'')
+        // checkbox que marca/desmarca todos os tópicos da sessão
+        const chk=document.createElement('div');chk.className='wsess-chk'+(allDone?' chk-on':'');chk.textContent='✓'
+        chk.onclick=()=>{
+          const c2=cronLoad(date)
+          if(allDone){sess.tops.forEach((_,ti)=>{const k=cronTopKey(si,ti);const i=c2.indexOf(k);if(i>=0)c2.splice(i,1)})}
+          else{sess.tops.forEach((_,ti)=>{const k=cronTopKey(si,ti);if(!c2.includes(k))c2.push(k)})}
+          cronSave(date,c2);buildSemana(cronWeek);buildCal();buildHoje();buildCronStats()
+        }
+        const info=document.createElement('div')
+        info.innerHTML=`<div class="wsess-time">${sess.time}</div>
+          <div class="wsess-mat" onclick="if(new Date(${date.getTime()})>=CRON_START)openCronModal(new Date(${date.getTime()}))">${sess.mat}</div>
+          <div class="wsess-tops">${sess.tops.join(' · ')}</div>`
+        sessEl.appendChild(chk);sessEl.appendChild(info);body.appendChild(sessEl)
+      })
+    }
+    card.appendChild(body);container.appendChild(card)
+  })
+}
+
+// ── HOJE ──
+function buildHoje(){
+  const dow=CRON_TODAY.getDay(), sched=CRON_SCHED[dow]
+  const el=document.getElementById('hoje-cron')
+  if(!sched){
+    el.innerHTML='<div class="card" style="text-align:center;padding:24px;color:var(--muted)">🌿 Hoje é domingo — dia de descanso. Recupere as energias!</div>'
+    return
+  }
+  const checked=cronLoad(CRON_TODAY)
+  el.innerHTML=`<div class="card-label" style="margin-bottom:14px">${DIAS_PT[dow]}, ${CRON_TODAY.getDate()} de ${MESES_PT[CRON_TODAY.getMonth()]} — Estudos de hoje</div>`
+  sched.forEach((sess,si)=>{
+    const block=document.createElement('div');block.className='card';block.style.marginBottom='12px'
+    block.innerHTML=`<div style="font-size:10px;color:var(--accent);font-weight:600;margin-bottom:4px">${sess.time}</div>
+      <div style="font-weight:600;margin-bottom:10px">${sess.mat}</div>`
+    sess.tops.forEach((top,ti)=>{
+      const key=cronTopKey(si,ti), done=checked.includes(key)
+      const item=document.createElement('label');item.className='top-item'+(done?' top-done':'');item.style.display='flex'
+      const cb=document.createElement('input');cb.type='checkbox';cb.checked=done
+      cb.onchange=()=>{
+        const c2=cronLoad(CRON_TODAY)
+        if(cb.checked){if(!c2.includes(key))c2.push(key);item.classList.add('top-done')}
+        else{const i=c2.indexOf(key);if(i>=0)c2.splice(i,1);item.classList.remove('top-done')}
+        cronSave(CRON_TODAY,c2);buildCal();buildCronStats()
+      }
+      item.appendChild(cb);item.appendChild(document.createTextNode(top))
+      block.appendChild(item)
+    })
+    el.appendChild(block)
+  })
+}
+
+// ── STATS ──
+function buildCronStats(){
+  let diasOk=0, topsOk=0
+  const keys=Object.keys(localStorage).filter(k=>k.startsWith('cron_'))
+  keys.forEach(k=>{
+    try{
+      const arr=JSON.parse(localStorage.getItem(k)||'[]')
+      if(arr.length>0){diasOk++;topsOk+=arr.length}
+    }catch(e){}
+  })
+  const horas=Math.floor(topsOk*18/60)
+  document.getElementById('cst-dias').textContent=diasOk
+  document.getElementById('cst-top').textContent=topsOk
+  document.getElementById('cst-hrs').textContent=horas>0?horas+'h':topsOk*18+'min'
+  // sequência
+  let seq=0,d=new Date(CRON_TODAY)
+  while(true){
+    if(d.getDay()===0){d.setDate(d.getDate()-1);continue}
+    const arr=cronLoad(d)
+    if(arr.length>0){seq++;d.setDate(d.getDate()-1)}else break
+  }
+  document.getElementById('cst-seq').textContent=seq
+}
+
+function initCronograma(){
+  // detecta semana atual
+  const diff=Math.floor((CRON_TODAY-CRON_START)/(7*24*60*60*1000))
+  cronWeek=Math.max(0,Math.min(3,diff))
+  const btns=document.querySelectorAll('.week-btn')
+  btns.forEach(b=>b.classList.remove('active'))
+  if(btns[cronWeek])btns[cronWeek].classList.add('active')
+  buildCal();buildSemana(cronWeek);buildHoje();buildCronStats()
 }
 
 function buildConteudo(){
@@ -669,9 +990,19 @@ function renderProgBars(){
 
 function notify(msg){const d=document.createElement('div');d.className='notif';d.textContent=msg;document.body.appendChild(d);setTimeout(()=>d.remove(),4000)}
 
-buildWeek();buildConteudo();buildQFilter();renderQ();buildChat()
+buildConteudo();buildQFilter();renderQ();buildChat();initCronograma()
 renderSessions();updMeta();updStats()
 document.getElementById('sStreak').textContent=calcStreak()
 </script>
+<!-- MODAL CRONOGRAMA -->
+<div class="cron-modal-ov" id="cron-modal-ov" onclick="closeCronModal(event)">
+  <div class="cron-modal">
+    <div class="cron-modal-hd">
+      <div class="cron-modal-title" id="cron-modal-title"></div>
+      <button class="cron-modal-close" onclick="closeCronModal()">✕</button>
+    </div>
+    <div id="cron-modal-body"></div>
+  </div>
+</div>
 </body>
 </html>
